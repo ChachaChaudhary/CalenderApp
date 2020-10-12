@@ -8,8 +8,14 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 router.get('/list', (req, res, next) => {
-    var sql = "select * from schedule where user_id=? and start_time >= ? and start_time <= ?"; 
-    var params = [req.user.userId,req.query.start,req.query.end];
+    var sql = "select * from schedule where user_id=? and start_time >= ?";
+      
+    var params = [req.user.userId,req.query.start];
+    if(req.query.end){
+        sql+="and start_time <= ?";
+        params.push(req.query.end);
+    }
+
     db.all(sql, params, (err, rows) => {
                  if (err) {
                      console.log(err);
